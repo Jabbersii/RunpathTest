@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using RestEase;
+using Web.Exceptions;
 using Web.Handlers;
 using Web.Models;
 using Web.ViewModels;
@@ -23,10 +25,17 @@ namespace Web.Controllers
             return View();
         }
 
-        public async Task<JsonResult> Data()
+        public async Task<IActionResult> Data()
         {
-            var photos = await this.mediator.Send(new GetPhotos());
-            return Json(photos);
+            try
+            {
+                var photos = await this.mediator.Send(new GetPhotos());
+                return Json(photos);
+            }
+            catch(RunpathAlbumWebException)
+            {
+                return StatusCode(500);
+            }
         }
 
         public IActionResult About()
