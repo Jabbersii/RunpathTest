@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Web.Handlers;
 using Web.Models;
 using Web.ViewModels;
 
@@ -22,27 +23,10 @@ namespace Web.Controllers
             return View();
         }
 
-        public Task<JsonResult> Data()
+        public async Task<JsonResult> Data()
         {
-            var photos = new[]
-            {
-                new PhotoViewModel()
-                {
-                    PhotoTitle = "accusamus beatae ad facilis cum similique qui sunt",
-                    AlbumName = "quidem molestiae enim",
-                    Url = new Uri("https://via.placeholder.com/600/92c952"),
-                    ThumbnailUrl = new Uri("https://via.placeholder.com/150/92c952")
-                },
-                new PhotoViewModel()
-                {
-                    PhotoTitle = "accusamus beatae ad facilis cum similique qui sunt",
-                    AlbumName = "quidem molestiae enim",
-                    Url = new Uri("https://via.placeholder.com/600/92c952"),
-                    ThumbnailUrl = new Uri("https://via.placeholder.com/150/92c952")
-                }
-            };
-
-            return Task.FromResult(Json(photos));
+            var photos = await this.mediator.Send(new GetPhotos());
+            return Json(photos);
         }
 
         public IActionResult About()

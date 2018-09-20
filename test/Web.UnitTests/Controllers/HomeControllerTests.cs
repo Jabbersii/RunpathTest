@@ -16,7 +16,7 @@ namespace Web.UnitTests.Controllers
 {
     public class HomeControllerTests
     {
-        [Fact(Skip = "Awaiting implementation")]
+        [Fact]
         public async Task Data_sends_correct_message_to_mediator()
         {
             var mediator = new Mock<IMediator>();
@@ -31,7 +31,7 @@ namespace Web.UnitTests.Controllers
             mediator.VerifyAll();
         }
 
-        [Fact(Skip = "Await implementation")]
+        [Fact]
         public async Task Data_returns_expected_data_when_invoked()
         {
             var data = new[]
@@ -62,7 +62,7 @@ namespace Web.UnitTests.Controllers
 
             jsonResult.Should().NotBeNull();
             jsonResult.Value.Should()
-                .BeOfType<IEnumerable<PhotoViewModel>>()
+                .BeOfType<PhotoViewModel[]>()
                 .Which
                 .Should().BeEquivalentTo(data);
                 
