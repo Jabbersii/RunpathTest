@@ -22,31 +22,10 @@
 </div>
 
 @section Scripts { 
+    <script src="~/js/index.js"></script>
     <script>
         $(document).ready(function () {
-            $('#photoTable').DataTable({
-                ajax: {
-                    url: '@Url.Action("Data", "Home")',
-                    dataSrc: ''
-                },
-                columns: [
-                    { data: 'photoTitle' },
-                    { data: 'albumName' },
-                    {
-                        data: 'thumbnailUrl',
-                        render: function (data, type, row) {
-                            let div = $('<div />');
-                            let img = $('<img />').attr({ src: data });
-                            let link = $('<a />').attr({ href: row.url });
-
-                            link.append(img);
-                            div.append(link);
-
-                            return div.html();
-                        }
-                    }
-                ]
-            });
+            initDataTable('@Url.Action("Data", "Home")');
         });
     </script>
 }
