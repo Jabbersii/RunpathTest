@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 using Web.ViewModels;
@@ -8,12 +10,19 @@ namespace Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IMediator mediator;
+
+        public HomeController(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
         public IActionResult Index()
         {
             return View();
         }
 
-        public JsonResult Data()
+        public Task<JsonResult> Data()
         {
             var photos = new[]
             {
@@ -33,7 +42,7 @@ namespace Web.Controllers
                 }
             };
 
-            return Json(photos);
+            return Task.FromResult(Json(photos));
         }
 
         public IActionResult About()
