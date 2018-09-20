@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using RestEase;
+using Web.Exceptions;
 using Web.Services;
 using Web.ViewModels;
 
@@ -26,23 +27,30 @@ namespace Web.Handlers
 
         public async Task<IEnumerable<PhotoViewModel>> Handle(GetPhotos request, CancellationToken cancellationToken)
         {
-            var photos = await this.photosApi.GetPhotos();
+            try
+            {
+                var photos = await this.photosApi.GetPhotos();
 
-            var albumIds = photos.Select(p => p.AlbumId).Distinct();
-            var albums = await this.albumsApi.GetAlbums(albumIds);
+                var albumIds = photos.Select(p => p.AlbumId).Distinct();
+                var albums = await this.albumsApi.GetAlbums(albumIds);
 
-            var photoViewModels = photos.Join(albums,
-                p => p.AlbumId,
-                a => a.Id,
-                (p, a) => new PhotoViewModel()
-                {
-                    PhotoTitle = p.Title,
-                    AlbumName = a.Title,
-                    ThumbnailUrl = p.ThumbnailUrl,
-                    Url = p.Url
-                });
+                var photoViewModels = photos.Join(albums,
+                    p => p.AlbumId,
+                    a => a.Id,
+                    (p, a) => new PhotoViewModel()
+                    {
+                        PhotoTitle = p.Title,
+                        AlbumName = a.Title,
+                        ThumbnailUrl = p.ThumbnailUrl,
+                        Url = p.Url
+                    });
 
-            return photoViewModels;
+                return photoViewModels;
+            }
+            catch (ApiException ex)
+            {
+                throw new RunpathAlbumWebException("Error communicating with API", ex);
+            }
         }
     }
 }
