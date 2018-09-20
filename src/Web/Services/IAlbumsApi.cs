@@ -11,6 +11,6 @@ namespace Web.Services
         Task<List<Album>> GetAlbums([Query("id")]IEnumerable<int> ids);
 
         [Get("albums/{id}")]
-        Task<Album> GetAlbum(int id);
+        Task<Album> GetAlbum([Path("id")] int id);
     }
 }

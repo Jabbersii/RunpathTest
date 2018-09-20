@@ -11,6 +11,6 @@ namespace Web.Services
         Task<List<Photo>> GetPhotos();
 
         [Get("photos/{id}")]
-        Task<Photo> GetPhoto(int id);
+        Task<Photo> GetPhoto([Path("id")] int id);
     }
 }
