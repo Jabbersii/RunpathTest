@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
+using RestEase;
+using Web.Exceptions;
 using Web.Handlers;
 using Web.Services;
 using Web.Services.Models;
@@ -72,6 +74,22 @@ namespace Web.UnitTests.Handlers
                         Url = new Uri("http://localhost/photo/2"),
                     }
                 });
+        }
+
+        [Fact]
+        public void Handler_wraps_API_Exception_in_application_exception()
+        {
+            var photosApi = new Mock<IPhotosApi>();
+            var albumsApi = new Mock<IAlbumsApi>();
+
+            photosApi.Setup(p => p.GetPhotos())
+                .ThrowsAsync(new ApiException(new System.Net.Http.HttpRequestMessage(), new System.Net.Http.HttpResponseMessage(), ""));
+
+            var handler = new GetPhotosHandler(photosApi.Object, albumsApi.Object);
+
+            Func<Task> testHandler = () => handler.Handle(new GetPhotos(), CancellationToken.None);
+
+            testHandler.Should().ThrowExactly<RunpathAlbumWebException>();
         }
     }
 }
