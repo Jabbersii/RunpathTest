@@ -2,7 +2,10 @@
     $('#photoTable').DataTable({
         ajax: {
             url: requestUrl,
-            dataSrc: ''
+            dataSrc: '',
+            error: function (xhr, error, ex) {
+                $('#errorMsg').text('An unexpected error occurred' + error);
+            }
         },
         columns: [
             { data: 'photoTitle' },
