@@ -4,4 +4,49 @@
 
 <div class="row">
     <h1>Photos</h1>
+    <table id="photoTable" class="table table-striped">
+        <thead>
+            <tr>
+                <td>
+                    Photo Title
+                </td>
+                <td>
+                    Album Name
+                </td>
+                <td>
+                    Thumbnail
+                </td>
+            </tr>
+        </thead>
+    </table>
 </div>
+
+@section Scripts { 
+    <script>
+        $(document).ready(function () {
+            $('#photoTable').DataTable({
+                ajax: {
+                    url: '@Url.Action("Data", "Home")',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'photoTitle' },
+                    { data: 'albumName' },
+                    {
+                        data: 'thumbnailUrl',
+                        render: function (data, type, row) {
+                            let div = $('<div />');
+                            let img = $('<img />').attr({ src: data });
+                            let link = $('<a />').attr({ href: row.url });
+
+                            link.append(img);
+                            div.append(link);
+
+                            return div.html();
+                        }
+                    }
+                ]
+            });
+        });
+    </script>
+}
