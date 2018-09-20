@@ -7,7 +7,9 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using RestEase;
 using Web.Controllers;
+using Web.Exceptions;
 using Web.Handlers;
 using Web.ViewModels;
 using Xunit;
@@ -58,14 +60,28 @@ namespace Web.UnitTests.Controllers
 
             var controller = new HomeController(mediator.Object);
 
-            JsonResult jsonResult = await controller.Data();
+            var result = await controller.Data();
 
-            jsonResult.Should().NotBeNull();
-            jsonResult.Value.Should()
-                .BeOfType<PhotoViewModel[]>()
-                .Which
-                .Should().BeEquivalentTo(data);
-                
+            result.Should().NotBeNull()
+                .And.BeOfType<JsonResult>()
+                .Which.Value.Should().BeOfType<PhotoViewModel[]>()
+                .Which.Should().BeEquivalentTo(data);
+        }
+
+        [Fact]
+        public async Task Data_returns_500_status_code_when_mediator_throws_exception()
+        {
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<GetPhotos>(), It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new RunpathAlbumWebException());
+
+            var controller = new HomeController(mediator.Object);
+
+            var result = await controller.Data();
+
+            result.Should().NotBeNull()
+                .And.BeOfType<StatusCodeResult>()
+                .Which.StatusCode.Should().Be(500);
         }
     }
 }
