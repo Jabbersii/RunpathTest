@@ -14,7 +14,7 @@ namespace Web.UnitTests.Handlers
 {
     public class GetPhotosTests
     {
-        [Fact(Skip = "Awaiting implementation")]
+        [Fact]
         public async Task Will_return_correctly_correlated_models_from_APIs()
         {
             var photos = new List<Photo>()

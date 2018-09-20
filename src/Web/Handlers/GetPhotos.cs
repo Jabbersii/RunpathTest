@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -14,18 +15,34 @@ namespace Web.Handlers
 
     public class GetPhotosHandler : IRequestHandler<GetPhotos, IEnumerable<PhotoViewModel>>
     {
-        private readonly IPhotosApi photos;
-        private readonly IAlbumsApi albums;
+        private readonly IPhotosApi photosApi;
+        private readonly IAlbumsApi albumsApi;
 
-        public GetPhotosHandler(IPhotosApi photos, IAlbumsApi albums)
+        public GetPhotosHandler(IPhotosApi photosApi, IAlbumsApi albumsApi)
         {
-            this.photos = photos;
-            this.albums = albums;
+            this.photosApi = photosApi;
+            this.albumsApi = albumsApi;
         }
 
-        public Task<IEnumerable<PhotoViewModel>> Handle(GetPhotos request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PhotoViewModel>> Handle(GetPhotos request, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var photos = await this.photosApi.GetPhotos();
+
+            var albumIds = photos.Select(p => p.AlbumId).Distinct();
+            var albums = await this.albumsApi.GetAlbums(albumIds);
+
+            var photoViewModels = photos.Join(albums,
+                p => p.AlbumId,
+                a => a.Id,
+                (p, a) => new PhotoViewModel()
+                {
+                    PhotoTitle = p.Title,
+                    AlbumName = a.Title,
+                    ThumbnailUrl = p.ThumbnailUrl,
+                    Url = p.Url
+                });
+
+            return photoViewModels;
         }
     }
 }
