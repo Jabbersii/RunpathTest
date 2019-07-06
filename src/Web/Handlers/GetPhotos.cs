@@ -29,8 +29,13 @@ namespace Web.Handlers
         {
             try
             {
-                var photos = await this.photosApi.GetPhotos();
-                var albums = await this.albumsApi.GetAlbums();
+                var photosTask = this.photosApi.GetPhotos();
+                var albumsTask = this.albumsApi.GetAlbums();
+
+                await Task.WhenAll(photosTask, albumsTask);
+
+                var photos = await photosTask;
+                var albums = await albumsTask;
 
                 var photoViewModels = photos.Join(albums,
                     p => p.AlbumId,
