@@ -50,7 +50,7 @@ namespace Web.UnitTests.Handlers
             var albumsApi = new Mock<IAlbumsApi>();
 
             photosApi.Setup(p => p.GetPhotos()).ReturnsAsync(photos);
-            albumsApi.Setup(a => a.GetAlbums(new[] { 1 })).ReturnsAsync(albums);
+            albumsApi.Setup(a => a.GetAlbums()).ReturnsAsync(albums);
 
             var handler = new GetPhotosHandler(photosApi.Object, albumsApi.Object);
 

@@ -9,8 +9,5 @@ namespace Web.Services
     {
         [Get("photos")]
         Task<List<Photo>> GetPhotos();
-
-        [Get("photos/{id}")]
-        Task<Photo> GetPhoto([Path("id")] int id);
     }
 }

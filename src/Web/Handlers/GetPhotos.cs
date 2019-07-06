@@ -30,9 +30,7 @@ namespace Web.Handlers
             try
             {
                 var photos = await this.photosApi.GetPhotos();
-
-                var albumIds = photos.Select(p => p.AlbumId).Distinct();
-                var albums = await this.albumsApi.GetAlbums(albumIds);
+                var albums = await this.albumsApi.GetAlbums();
 
                 var photoViewModels = photos.Join(albums,
                     p => p.AlbumId,
