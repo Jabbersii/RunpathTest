@@ -28,7 +28,7 @@ namespace Web.UnitTests.Controllers
 
             var controller = new HomeController(mediator.Object);
 
-            await controller.Data();
+            await controller.Data(CancellationToken.None);
 
             mediator.VerifyAll();
         }
@@ -60,7 +60,7 @@ namespace Web.UnitTests.Controllers
 
             var controller = new HomeController(mediator.Object);
 
-            var result = await controller.Data();
+            var result = await controller.Data(CancellationToken.None);
 
             result.Should().NotBeNull()
                 .And.BeOfType<JsonResult>()
@@ -77,7 +77,7 @@ namespace Web.UnitTests.Controllers
 
             var controller = new HomeController(mediator.Object);
 
-            var result = await controller.Data();
+            var result = await controller.Data(CancellationToken.None);
 
             result.Should().NotBeNull()
                 .And.BeOfType<StatusCodeResult>()

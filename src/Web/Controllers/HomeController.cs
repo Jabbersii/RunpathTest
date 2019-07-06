@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +26,11 @@ namespace Web.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Data()
+        public async Task<IActionResult> Data(CancellationToken token)
         {
             try
             {
-                var photos = await this.mediator.Send(new GetPhotos());
+                var photos = await this.mediator.Send(new GetPhotos(), token);
                 return Json(photos);
             }
             catch(RunpathAlbumWebException)

@@ -49,8 +49,8 @@ namespace Web.UnitTests.Handlers
             var photosApi = new Mock<IPhotosApi>();
             var albumsApi = new Mock<IAlbumsApi>();
 
-            photosApi.Setup(p => p.GetPhotos()).ReturnsAsync(photos);
-            albumsApi.Setup(a => a.GetAlbums()).ReturnsAsync(albums);
+            photosApi.Setup(p => p.GetPhotos(CancellationToken.None)).ReturnsAsync(photos);
+            albumsApi.Setup(a => a.GetAlbums(CancellationToken.None)).ReturnsAsync(albums);
 
             var handler = new GetPhotosHandler(photosApi.Object, albumsApi.Object);
 
@@ -82,7 +82,7 @@ namespace Web.UnitTests.Handlers
             var photosApi = new Mock<IPhotosApi>();
             var albumsApi = new Mock<IAlbumsApi>();
 
-            photosApi.Setup(p => p.GetPhotos())
+            photosApi.Setup(p => p.GetPhotos(CancellationToken.None))
                 .ThrowsAsync(new ApiException(new System.Net.Http.HttpRequestMessage(), new System.Net.Http.HttpResponseMessage(), ""));
 
             var handler = new GetPhotosHandler(photosApi.Object, albumsApi.Object);

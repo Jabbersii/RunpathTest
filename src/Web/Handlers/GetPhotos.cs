@@ -29,8 +29,8 @@ namespace Web.Handlers
         {
             try
             {
-                var photosTask = this.photosApi.GetPhotos();
-                var albumsTask = this.albumsApi.GetAlbums();
+                var photosTask = this.photosApi.GetPhotos(cancellationToken);
+                var albumsTask = this.albumsApi.GetAlbums(cancellationToken);
 
                 await Task.WhenAll(photosTask, albumsTask);
 
